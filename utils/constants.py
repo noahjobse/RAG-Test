@@ -1,0 +1,4 @@
+DEFAULT_CHUNK_SIZE = 1000
+DEFAULT_OVERLAP = 200
+DEFAULT_MODEL = "gpt-4o-mini"
+DEFAULT_EMBEDDINGS = "text-embedding-3-large"
