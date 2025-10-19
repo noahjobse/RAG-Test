@@ -1,3 +1,22 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
 .env
+.venv
+venv/
+env/
+
+# Local config and logs
+*.log
+rag_cli_config.json
+
+# OS / IDE junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 /docs
-/rag_cli/__pycache__
