@@ -16,8 +16,8 @@ def setup_rag_system(urls: List[str], chunk_size=1000, chunk_overlap=200):
         import bs4
 
         print(f"Setting up RAG system from URLs: {urls}")
-        llm = init_chat_model("gpt-4o-mini", model_provider="openai")
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+        llm = init_chat_model("gpt-5-mini", model_provider="openai")
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
         loader = WebBaseLoader(
             web_paths=urls,
@@ -86,8 +86,8 @@ def setup_rag_system_local(folder_path: str, chunk_size=1000, chunk_overlap=200)
         print("Generating summary...")
         print(summarize_documents(docs, all_splits))
 
-        llm = init_chat_model("gpt-4o-mini", model_provider="openai")
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+        llm = init_chat_model("gpt-5-mini", model_provider="openai")
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         vector_store = InMemoryVectorStore(embeddings)
         _ = vector_store.add_documents(all_splits)
 
