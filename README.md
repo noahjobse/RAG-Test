@@ -165,11 +165,11 @@ Goodbye!
 2. **Text Processing**: Recursive character-based text splitting with configurable parameters
 3. **Vector Embedding**: OpenAI's text-embedding-3-large model for semantic representation
 4. **Similarity Search**: In-memory vector store for efficient document retrieval
-5. **Answer Generation**: GPT-4o-mini model with retrieved context for response generation
+5. **Answer Generation**: GPT-5-mini model with retrieved context for response generation
 
 ### Technology Stack
 
-- **Language Model**: GPT-4o-mini (OpenAI)
+- **Language Model**: GPT-5-mini (OpenAI)
 - **Embedding Model**: text-embedding-3-large (OpenAI)
 - **Vector Store**: InMemoryVectorStore (LangChain)
 - **Orchestration**: LangGraph for workflow management
