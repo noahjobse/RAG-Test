@@ -2,11 +2,10 @@ import os
 import sys
 from datetime import datetime
 from langchain_core.documents import Document
-from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from rag_cli.env_check import check_environment
 from rag_cli.setup_rag import setup_rag_system, setup_rag_system_local
 from rag_cli.query import interactive_mode
-from rag_cli.cost_calc import estimate_folder_embedding_cost
+from rag_cli.cost_calc import summarize_embedding_options
 
 
 # ============================================================
@@ -78,7 +77,7 @@ def main():
     print("[2] Load local markdown folder")
     print("[3] Check environment")
     print("[4] Quit")
-    print("[5] 💰 Estimate embedding cost for local folder\n")
+    print("[5] 💰 Estimate embedding + Qdrant storage plan\n")
 
     choice = input("Select an option: ").strip()
 
@@ -97,31 +96,22 @@ def main():
         check_environment()
         return
 
-    # --- Option 5: Cost estimation -------------------------------------------
+    # --- Option 5: Unified cost + Qdrant plan --------------------------------
     elif choice == "5":
         folder = select_local_folder()
         if not folder:
             print("❌ No folder selected.")
             return
-
         if not os.path.isdir(folder):
             print("❌ That path does not exist or is not a directory.")
             return
 
-        # Setup log file
-        log_dir = os.path.join(os.getcwd(), "logs")
-        os.makedirs(log_dir, exist_ok=True)
-        log_path = os.path.join(log_dir, "embedding_cost.log")
-
-        with open(log_path, "a", encoding="utf-8") as log:
-            log.write(f"\n=== RAG CLI Cost Estimation — {datetime.now().isoformat()} ===\n")
-            log.write(f"Selected folder: {folder}\n")
-
-        print(f"\n🔍 Loading markdown files from {folder}...\n")
+        print(f"\n📂 Loading markdown files from {folder}...\n")
 
         loaded_docs = []
         skipped_files = []
 
+        # Load all .md files from the chosen folder
         for root, _, files in os.walk(folder):
             for f in files:
                 if f.lower().endswith(".md"):
@@ -133,6 +123,7 @@ def main():
                     except Exception as e:
                         skipped_files.append((path, str(e)))
 
+        # Handle skipped/unreadable files
         if skipped_files:
             print(f"⚠️ Skipped {len(skipped_files)} files due to read errors.")
             for p, err in skipped_files[:3]:
@@ -144,35 +135,10 @@ def main():
             print("⚠️ No readable markdown files found.")
             return
 
-        print(f"✅ Loaded {len(loaded_docs)} valid markdown files.\n")
+        print(f"✅ Loaded {len(loaded_docs)} markdown files.\n")
 
-        try:
-            print("💰 Calculating estimated embedding cost...\n")
-            results = []
-
-            for model in ["text-embedding-3-small", "text-embedding-3-large"]:
-                result = estimate_folder_embedding_cost(loaded_docs, model=model)
-                results.append(result)
-                print(f"  • {model}:")
-                print(f"     Tokens: {result['total_tokens']:,}")
-                print(f"     Cost:   ${result['estimated_cost_usd']} USD\n")
-
-            # Write results to log
-            with open(log_path, "a", encoding="utf-8") as log:
-                log.write(f"Processed {len(loaded_docs)} documents.\n")
-                if skipped_files:
-                    log.write(f"Skipped {len(skipped_files)} files due to read errors.\n")
-                for result in results:
-                    log.write(f"Model: {result['model']}\n")
-                    log.write(f"  Tokens: {result['total_tokens']}\n")
-                    log.write(f"  Estimated cost: ${result['estimated_cost_usd']}\n")
-            print(f"🪵 Log written to {log_path}")
-
-        except Exception as e:
-            err_msg = f"❌ Error estimating cost: {e}"
-            print(err_msg)
-            with open(log_path, "a", encoding="utf-8") as log:
-                log.write(err_msg + "\n")
+        # Run full embedding + Qdrant plan summary
+        summarize_embedding_options(loaded_docs)
         return
 
     # --- Option 4 or invalid --------------------------------------------------

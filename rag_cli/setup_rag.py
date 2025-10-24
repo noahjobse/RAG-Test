@@ -77,7 +77,12 @@ def setup_rag_system_local(folder_path: str, chunk_size=1000, chunk_overlap=200)
         from typing_extensions import TypedDict
 
         print(f"Loading local docs from {folder_path}...")
-        loader = DirectoryLoader(folder_path, glob="**/*.md", loader_cls=TextLoader)
+        loader = DirectoryLoader(
+            folder_path,
+            glob="**/*.md",
+            loader_cls=lambda p: TextLoader(p, encoding="utf-8", autodetect_encoding=True)
+        )
+
         docs = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
