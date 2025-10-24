@@ -43,7 +43,7 @@ def summarize_documents(docs, all_splits):
     try:
         from langchain.chat_models import init_chat_model
         
-        llm = init_chat_model("gpt-4o-mini", model_provider="openai")
+        llm = init_chat_model("gpt-5-mini", model_provider="openai")
         
         doc_summary = f"""
 Document Summary:
@@ -94,7 +94,7 @@ def setup_rag_system(urls: List[str], chunk_size: int = 1000, chunk_overlap: int
         print(f"   URLs: {urls}")
         print(f"   Chunk size: {chunk_size}, overlap: {chunk_overlap}")
 
-        llm = init_chat_model("gpt-4o-mini", model_provider="openai")
+        llm = init_chat_model("gpt-5-mini", model_provider="openai")
         embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
         print("Loading documents...")
@@ -173,7 +173,7 @@ def setup_rag_system_local(folder_path: str, chunk_size: int = 1000, chunk_overl
         print("Generating summary...")
         print(summarize_documents(docs, all_splits))
 
-        llm = init_chat_model("gpt-4o-mini", model_provider="openai")
+        llm = init_chat_model("gpt-5-mini", model_provider="openai")
         embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
         vector_store = InMemoryVectorStore(embeddings)

@@ -27,7 +27,7 @@ from typing_extensions import List, TypedDict
 import bs4
 
 # Initialize LLM and Embeddings
-llm = init_chat_model("gpt-4o-mini", model_provider="openai")
+llm = init_chat_model("gpt-5-mini", model_provider="openai")
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 
 # Load content
